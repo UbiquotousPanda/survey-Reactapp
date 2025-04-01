@@ -1,0 +1,19 @@
+name: my-survey-app
+
+services:
+  react-app:
+    image: node:22-alpine
+    container_name: react-app
+    build: 
+      context: ./my-survey-app
+      dockerfile: dockerfile
+    ports:
+      - 5173:5173
+    environment:
+      - MONGODB_URL=mongodb://root:example@mongodb:27027/surveyDB
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example

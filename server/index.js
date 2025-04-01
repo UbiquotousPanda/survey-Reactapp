@@ -1,23 +1,30 @@
-import express, { json } from 'express';
-import { connect, Schema, model } from 'mongoose';
-import cors from 'cors';
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
 const app = express();
-app.use(cors());
-app.use(json());
+const PORT = 3000; // Ensure this matches the port in Dockerfile and docker-compose.yml
 
-connect(process.env.MONGODB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+app.use(cors());
+app.use(express.json());
+
+// Example route
+app.get('/', (req, res) => {
+  res.send('Backend is running!');
 });
 
-const surveySchema = new Schema({
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
+const surveySchema = new mongoose.Schema({
   name: String,
   email: String,
   feedback: String,
 });
 
-const Survey = model('Survey', surveySchema);
+const Survey = mongoose.model('Survey', surveySchema);
 
 app.post('/submit', async (req, res) => {
   const survey = new Survey(req.body);
@@ -30,6 +37,7 @@ app.get('/surveys', async (req, res) => {
   res.send(surveys);
 });
 
-app.listen(5000, () => {
-  console.log('Server is running on port 5000');
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

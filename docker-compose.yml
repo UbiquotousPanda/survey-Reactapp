@@ -16,11 +16,11 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: ./server
       dockerfile: Dockerfile
     container_name: backend
     ports:
-      - "5000:5000" # Adjust this to match your backend server's port
+      - "3000:3000" # Match the port exposed in the Dockerfile
     environment:
       - MONGODB_URL=mongodb://root:example@mongodb:27017/surveyDB
     depends_on:
